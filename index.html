@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+   
+    <head>
+        <title>Giphy API</title>
+        <style>
+            .container {
+                width: calc(200px * 4 + 3em);
+                margin: auto
+            }
+
+            .results {
+                columns: 4;
+                column-gap: 1em;
+            }
+            
+            .item {
+                margin-bottom: 1em;
+            }
+
+            .search-input {
+                margin-bottom: 1em;
+            }
+
+
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <header>
+                <form id="search-form">
+                    <input class="search-input" id="search-input" type="text" placeholder="search">
+                    <button type="submit">Search</button>
+                </form>
+            </header>
+
+            <div id="results" class="results">
+
+            </div>
+
+            </div>
+        <script>
+
+            const searchForm = document.getElementById('search-form')
+            const searchInput = document.getElementById('search-input')
+            const resultsElement = document.getElementById('results')
+
+            searchForm.addEventListener('submit', function(event){
+                event.preventDefault()
+                const q = searchInput.value
+                search(q)
+            })
+
+            function search(q) {
+                const apikey = 'O3hzhfJcrwsqENuStoPlsXUXbC9vD4bq'
+                const path = `https://api.giphy.com/v1/gifs/search?api_key=${apikey}&q=${q}`
+                
+                fetch(path).then(function(res) {
+                    return res.json()
+                })
+                .then(function(json) {
+                    console.log(json.data[0].images.fixed_width.url)
+                    let resultsHTML = ''
+
+                    json.data.forEach(function(object){
+                        console.log(object.images.fixed_width.url)
+                        const url = object.images.fixed_width.url
+                        const width = object.images.fixed_width.width
+                        const height = object.images.fixed_width.height
+                        const title = object.title
+                        resultsHTML += `<img class ="item" src="${url}" width="${width}" height="${height}" alt="${title}">`
+                    })
+
+                    resultsElement.innerHTML = resultsHTML
+                }).catch(function(err) {
+                    console.log(err.message)
+                })
+            }
+
+            
+            
+
+            
+        </script>
+    </body>
+</html>
